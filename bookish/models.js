@@ -198,7 +198,13 @@
           return true;
         }
         body = model.get('body') || '';
-        return bodyText = body.replace(/\<(\/?[^\\>]+)\\>/, ' ').replace(/\s+/, ' ').trim();
+        if ('string' === typeof body) {
+          bodyText = body.replace(/\<(\/?[^\\>]+)\\>/, ' ').replace(/\s+/, ' ').trim();
+          if (bodyText.toLowerCase().search(this.filterStr.toLowerCase()) >= 0) {
+            return true;
+          }
+        }
+        return false;
       },
       initialize: function(models, options) {
         var _this = this;

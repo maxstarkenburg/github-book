@@ -206,9 +206,11 @@ define ['exports', 'jquery', 'backbone', 'bookish/media-types', 'i18n!bookish/nl
       # Search inside the `body` attribute if it exists,
       # filtering out HTML tag names and attributes.
       body = model.get('body') or ''
-      bodyText = body.replace(/\<(\/?[^\\>]+)\\>/, ' ').replace(/\s+/, ' ').trim()
+      if 'string' == typeof body
+        bodyText = body.replace(/\<(\/?[^\\>]+)\\>/, ' ').replace(/\s+/, ' ').trim()
+        return true if bodyText.toLowerCase().search(@filterStr.toLowerCase()) >= 0
 
-      # **FIXME:** Whoops! Add code to actually search the `body`
+      return false
 
     initialize: (models, options) ->
       @filterStr = options.filterStr or ''
