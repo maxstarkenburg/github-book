@@ -55,22 +55,25 @@
 
   <div class="btn-group">
     <button class="btn action insertImage-oer" rel="tooltip" title="Insert Figure"><i class="icon-picture"></i></button>
-    <button class="btn action insertMath" rel="tooltip" title="Insert Math">x<sup>2</sup></button>
+    <!--
     <button class="btn action insertNote" rel="tooltip" title="Insert Note">Note</button>
-  </div>
-
-<!--
-  <div class="btn-group">
+    -->
     <button class="btn action createTable" rel="tooltip" title="Create Table"><i class="icon-table"></i></button>
     <button class="btn dropdown-toggle" data-toggle="dropdown" rel="tooltip" title="Table Operations">
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
-      <li><button class="action addrowbefore">Add Row Before</button></li>
-      <li><button class="action addrowafter">Add Row After</button></li>
+      <li class="disabled"><a href="#" class="action addrowbefore">Add Row Before</a></li>
+      <li class="disabled"><a href="#" class="action addrowafter">Add Row After</a></li>
+      <li class="disabled"><a href="#" class="action addcolumnbefore">Add Column Before</a></li>
+      <li class="disabled"><a href="#" class="action addcolumnafter">Add Column After</a></li>
+      <li class="disabled"><a href="#" class="action addheaderrow">Add Header Row</a></li>
+      <li class="disabled"><a href="#" class="action deleterow">Delete Row</a></li>
+      <li class="disabled"><a href="#" class="action deletecolumn">Delete Column</a></li>
+      <li class="disabled"><a href="#" class="action deletetable">Delete Table</a></li>
     </ul>
+    <button class="btn action insertMath" rel="tooltip" title="Insert Math">x<sup>2</sup></button>
   </div>
--->
 
 <!-- / ".btn-toolbar" -->
 </div>
