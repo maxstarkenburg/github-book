@@ -4,6 +4,9 @@ require.config
   # # Configure Library Locations
   paths:
 
+    # Point to github OERPUB version of Aloha for gh-pages
+    # aloha: 'http://oerpub.github.com/Aloha-Editor/src/lib/aloha'
+
     # Change the Stub Auth piece
     'bookish/auth': 'gh-book/auth'
 
