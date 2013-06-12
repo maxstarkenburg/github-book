@@ -54,18 +54,21 @@ define ['aloha', 'block/blockmanager', 'aloha/plugin', 'aloha/pluginmanager', 'j
       jQuery(this).parents('.type-container').first().children('.type').text jQuery(this).text()
       jQuery(this).parents('.aloha-oer-block').first().attr 'data-type', jQuery(this).text().toLowerCase()
   ,
-    # Toggle a class on elements so if they are empty and have placeholder text
-    # the text shows up.
-    # See the CSS file more info.
-    name: 'blur'
+    name: 'click'
     selector: '[placeholder]'
     callback: ->
-      $el = jQuery @
-      # If the element does not contain any text (just empty paragraphs)
-      # Clear the contents so `:empty` is true
-      $el.empty() if not $el.text().trim()
-
-      $el.toggleClass 'aloha-empty', $el.is(':empty')
+      element = jQuery(this)
+      if element.attr('placeholder')
+        element.removeClass 'placeholder'
+        element.text '' if element.attr('placeholder') is element.text()
+  ,
+    name: 'focusout'
+    selector: '[placeholder]'
+    callback: ->
+      element = jQuery(this)
+      if element.attr('placeholder') and element.text() == ''
+        element.text element.attr('placeholder')
+        element.addClass 'placeholder'
   ]
   insertElement = (element) ->
 
@@ -120,23 +123,14 @@ define ['aloha', 'block/blockmanager', 'aloha/plugin', 'aloha/pluginmanager', 'j
 
     makeClean: (content) ->
       for selector of deactivateHandlers
-        content.find(".aloha-oer-block.#{selector}").each ->
+        content.find(".aloha-oer-block#{selector}").each ->
           deactivate jQuery(this)
       cleanIds(content)
 
     init: ->
-      # On activation add a `aloha-empty` class on all elements that:
-      # - have a `placeholder` attribute
-      # - and do not have any children
-      #
-      # See CSS for placeholder logic. This class is updated on blur.
-      Aloha.bind 'aloha-editable-activated', (e, params) =>
-        $root = jQuery(params.editable.obj)
-        $root.find('[placeholder]:empty').addClass('aloha-empty')
 
       Aloha.bind 'aloha-editable-created', (e, params) =>
         $root = params.obj
-
         # Add a `.aloha-oer-block` to all registered classes
         classes = []
         classes.push selector for selector of activateHandlers
