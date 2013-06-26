@@ -16,7 +16,7 @@
       'bootstrap-path': 'lib/bootstrap-2.2.2/js',
       select2: 'lib/select2/select2',
       moment: 'node_modules/moment/moment',
-      'font-awesome': 'lib/Font-Awesome/build/assets/font-awesome/css/font-awesome',
+      'font-awesome': 'lib/Font-Awesome/css/font-awesome',
       handlebars: 'lib/require-handlebars-plugin/Handlebars',
       i18nprecompile: 'lib/require-handlebars-plugin/hbs/i18nprecompile',
       json2: 'lib/require-handlebars-plugin/hbs/json2',
