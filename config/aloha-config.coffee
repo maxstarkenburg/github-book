@@ -27,26 +27,20 @@ define ['jquery'], (jQuery) ->
     plugins:
       # All the plugins we use in Aloha
       load: [
-        'common/ui'
         'oer/toolbar'
-        'oer/popover'
-        'oer/format'
+        'common/ui'
+        'common/format'
         'common/contenthandler'
         'common/paste'
         'common/block'
         'common/list'
-        # 'common/format'
-        'oer/table'
-        'oer/math'
+        'common/table'
         'extra/draganddropfiles'
         'common/image'
+        'oer/popover'
+        'oer/math'
         'oer/assorted'
-        'oer/title'
-        'common/undo'
-        'oer/undobutton'
-        'oer/genericbutton'
         'oer/semanticblock'
-        'oer/exercise'
         'oer/note'
       ]
 

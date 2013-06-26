@@ -20,7 +20,7 @@
       },
       errorhandling: true,
       plugins: {
-        load: ['common/ui', 'oer/toolbar', 'oer/popover', 'oer/format', 'common/contenthandler', 'common/paste', 'common/block', 'common/list', 'oer/table', 'oer/math', 'extra/draganddropfiles', 'common/image', 'oer/assorted', 'oer/title', 'common/undo', 'oer/undobutton', 'oer/genericbutton', 'oer/semanticblock', 'oer/exercise', 'oer/note'],
+        load: ['oer/toolbar', 'common/ui', 'common/format', 'common/contenthandler', 'common/paste', 'common/block', 'common/list', 'common/table', 'extra/draganddropfiles', 'common/image', 'oer/popover', 'oer/math', 'oer/assorted', 'oer/semanticblock', 'oer/note'],
         draganddropfiles: {
           upload: {
             config: {
