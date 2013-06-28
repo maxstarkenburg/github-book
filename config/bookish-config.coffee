@@ -29,6 +29,7 @@ require.config
     moment: 'node_modules/moment/moment'
 
     'font-awesome': 'lib/Font-Awesome/css/font-awesome'
+    'cnx-oerpub-style': 'oerpub/html5_content_in_oerpub'
 
     # ## Handlebars Dependencies
     # The requirejs plugin to support handlebars has several dependencies

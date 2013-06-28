@@ -17,6 +17,7 @@
       select2: 'lib/select2/select2',
       moment: 'node_modules/moment/moment',
       'font-awesome': 'lib/Font-Awesome/css/font-awesome',
+      'cnx-oerpub-style': 'oerpub/html5_content_in_oerpub',
       handlebars: 'lib/require-handlebars-plugin/Handlebars',
       i18nprecompile: 'lib/require-handlebars-plugin/hbs/i18nprecompile',
       json2: 'lib/require-handlebars-plugin/hbs/json2',
