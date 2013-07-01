@@ -5,10 +5,10 @@
 
 /* =========== headers =========== */
 
-.section-header{
+#layout-main-area .section-header{
   font-size: 1.5em;
 }
- .section .section .section-header{
+#layout-main-area  .section .section .section-header{
   font-size: 1.05em;
 }
 
@@ -20,7 +20,7 @@
 .equation-number, .view-math, .view-math a, .references-header, 
 .glossary-header, .bibtex-reference, .footnotes-header{
 */
-span.cnx_label, .dragged span.cnx_label, .solution-toggle, .footnote-reference, 
+#layout-main-area span.cnx_label, .dragged span.cnx_label, .solution-toggle, .footnote-reference, 
 .equation-number, .view-math, .view-math a, .references-header, 
 .glossary-header, .bibtex-reference, .footnotes-header{
   font-size: .9em;
@@ -32,7 +32,7 @@ span.cnx_label, .dragged span.cnx_label, .solution-toggle, .footnote-reference,
 
 /* ========== section & section headers ========== */
 
-h1{
+#layout-main-area h1{
   color: #369;
   padding: 0 0 .1em;
   border: 0 solid #369;
@@ -44,7 +44,7 @@ h1{
   line-height: 1.5em;
 }
 
-h2, h3, h4, h5, h6, dl, dt, dd{
+#layout-main-area h2, #layout-main-area h3, #layout-main-area h4, #layout-main-area h5, #layout-main-area h6, #layout-main-area dl, #layout-main-area dt, #layout-main-area dd{
   color: #369;
   padding: 0 0 .1em;
   border: 0 solid #369;
@@ -529,7 +529,7 @@ math{
   margin-top: 0;
 }
 
-.glossary{
+#layout-main-area .glossary{
   margin: 1.2em 0 1.2em 3em;
 }
 
@@ -541,19 +541,19 @@ math{
   border: 0;
 }
 
-.glossary dt{
+#layout-main-area .glossary dt{
   margin-left: -3em;
 }
 
-.glossary dd, .glossary .example-header{
+#layout-main-area .glossary dd, #layout-main-area .glossary .example-header{
   margin-left: .5em;
 }
 
-.glossary .lensinfo dd{
+#layout-main-area .glossary .lensinfo dd{
   margin-left: 0;
 }
 
-.glossary .seealso{
+#layout-main-area .glossary .seealso{
   display: block;
   margin: .75em 0 0 0;
 }
@@ -612,7 +612,7 @@ pre.space{
   border-left-color: #c1d1e0;
   border-top-color: #c1d1e0;
 }
-table {
+#layout-main-area table {
     table-layout: fixed;
     width: 98%;
     margin: 0.25em 1em;
@@ -621,12 +621,12 @@ table {
     border-collapse: collapse;
 }
 
-table td, table th {
+#layout-main-area table td, #layout-main-area table th {
     border-bottom: 1px solid #666666;
     border-right: 1px solid #666666;
 }
 
-table caption {
+#layout-main-area table caption {
     padding-top: 0.25em;
     text-align: left;
     caption-side: bottom;
@@ -636,7 +636,7 @@ table caption {
     text-transform: uppercase;
 }
 
-th {
+#layout-main-area th {
     background-color: #F3F3F3;
     text-align: left;
 }
