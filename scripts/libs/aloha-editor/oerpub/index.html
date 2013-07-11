@@ -82,6 +82,7 @@
                                     oer/genericbutton,
                                     oer/semanticblock,
                                     oer/exercise,
+                                    oer/quotation,
                                     oer/note"> <!-- xhtml workaround --></script>
 
             <script type="text/javascript"
@@ -91,7 +92,6 @@
                     tal:content="string:var save_url = '${request.route_url('preview_save')}';">
                     var save_url = null;</script>
             <script type="text/javascript">
-
                 Aloha.ready(function(){
                     Aloha.require(['PubSub', 'genericbutton/genericbutton-plugin'],
                             function(PubSub, GenericButton){
@@ -309,6 +309,7 @@
                         <ul class="dropdown-menu">
                           <li><a href="#" class="action insertNote">Note to Reader</a></li>
                           <li><a href="#" class="action insertExercise">Exercise</a></li>
+                          <li><a href="#" class="action insertQuotation">Quotation</a></li>
                         </ul>
                       </div>
                     </div>
@@ -324,6 +325,9 @@
                             <div class="exercise">
                                 <div class="problem"></div>
                             </div>
+
+                            <blockquote class="quote">
+                            </blockquote>
                         </div>
 
                     </div>

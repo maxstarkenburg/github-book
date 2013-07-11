@@ -23,6 +23,12 @@
     font-style: italic;
 }
 
+.aloha-oer-block-placeholder {
+    background: #C5DAE9;
+    border: 1px dashed #1b86d2;
+    min-height: 100px;
+}
+
 /* Make titles inline so they show up next to the type dropdown if there is one */
 .aloha-oer-block > .title { display: inline; }
 
@@ -67,9 +73,13 @@
     position: absolute;
     left: 50%;
     display: none !important; /* override the default aloha display logic for handles */
+    cursor: -moz-grab !important;
+    cursor: -webkit-grab !important;
     cursor: url('openhand.cur'), default;
 }
 .semantic-container.aloha-oer-dragging .aloha-block-handle {
+    cursor: -moz-grabbing !important;
+    cursor: -webkit-grabbing !important;
     cursor: url('closedhand.cur'), default;
 }
 .semantic-container.drag-active .aloha-block-handle {
@@ -114,7 +124,7 @@
 .aloha-oer-block {
   padding: 20px 10px 5px 20px;
   min-height: 50px;
-  margin: 10px 50px 10px 50px;
+  margin: 0 30px 0 30px;
   border: 1px solid #333;
   border-top-color: #ccc;
   border-left-color: #ccc;
@@ -135,6 +145,7 @@
 }
 
 .aloha-oer-block .type {
+    font-weight: bold;
     margin: 5px 10px 0 5px;
     color: #369;
     text-decoration: none;
@@ -153,10 +164,32 @@
 }
 
 .aloha-oer-block .title {
-  font-size: 1em;
+    font-size: 1em;
+}
+.aloha-oer-block .title:not(.aloha-empty) {
+    font-weight: bold;
 }
 
 /* ========== note ========== */
+.semantic-drag-source > * > * {
+    display: none;
+}
+.semantic-drag-source > *:hover {
+    background: #DDD;
+}
+.semantic-drag-source > * {
+    margin: 5px;
+    padding: 5px 0 5px 10px;
+    border: 1px solid black;
+    min-height: 0 !important;
+    height: 20px;
+    width: 155px;
+    border-radius: 5px;
+    background: #EEE;
+    cursor: -moz-grab !important;
+    cursor: -webkit-grab !important;
+    cursor: url('openhand.cur'), default;
+}
 
 .semantic-drag-helper {
     border-radius: 5px;
@@ -168,6 +201,9 @@
     height: 50px;
     max-width: 300px;
     max-height: 50px;
+    cursor: -moz-grabbing !important;
+    cursor: -webkit-grabbing !important;
+    cursor: url('closedhand.cur'), default;
 }
 
 .semantic-drag-helper .title,
@@ -183,6 +219,8 @@
     margin-right: 10px;
 }
 .semantic-drag-helper .title {
+    font-weight: bold;
     color: #369;
 }
+
 

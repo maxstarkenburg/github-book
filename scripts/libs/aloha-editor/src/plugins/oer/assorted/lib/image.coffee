@@ -25,7 +25,7 @@ define ['aloha', 'jquery', 'aloha/plugin', 'image/image-plugin', 'ui/ui', 'seman
         </div>
         <div class="image-alt">
           <div class="forminfo">
-            <i class="icon-warning-sign"></i><strong>Describe the image for someone who cannot see it.</strong> This description can be read aloud, making it possible for visually impaired learners to understand the content.
+            <i class="icon-warning"></i><strong>Describe the image for someone who cannot see it.</strong> This description can be read aloud, making it possible for visually impaired learners to understand the content.
           </div>
           <div>
             <textarea name="alt" type="text" placeholder="Enter description ..."></textarea>
@@ -227,7 +227,7 @@ define ['aloha', 'jquery', 'aloha/plugin', 'image/image-plugin', 'ui/ui', 'seman
     if alt
         editDiv.html('<i class="icon-edit"></i>').addClass('passive')
     else
-        editDiv.html('<i class="icon-warning-sign"></i> Description missing').removeClass('passive')
+        editDiv.html('<i class="icon-warning"></i><span class="warning-text">Description missing</span>').removeClass('passive')
  
   activate = (element) ->
     wrapper = $('<div class="image-wrapper">').css('width', element.css('width'))
@@ -248,8 +248,22 @@ define ['aloha', 'jquery', 'aloha/plugin', 'image/image-plugin', 'ui/ui', 'seman
     element.append(img)
     element.attr('data-alt', img.attr('alt') || '')
 
-    # wrap the whole thing in a paragraph just so it passes the server's validation rules
-    element.parents('.semantic-container').wrap('<p>')
+    # image must be contained within a media element
+    $mediaset = element.closest('.media')
+    if $mediaset.length > 0
+      $media = jQuery($mediaset[0])
+      # media must be contained in :
+      # preformat (media must be block display), para, title, label, cite, cite-title, 
+      # link, emphasis, term, sub, sup, quote (media must be block display), foreign, 
+      # footnote, equation, note (media must be block display), item, code (media must be block display), 
+      # figure, subfigure, caption, commentary, meaning, entry, statement, proof, problem, 
+      # solution, content (media must be block display), section (media must be block display)
+      legalparents = $media.parents("figure, .para, .equation, .note, .quote")
+      if legalparents.length == 0
+        # media/image appears to be orphaned (via either user editing or block moving)
+        # add a p container to keep html canonical
+        element.parents('.semantic-container').wrap('<p class="para">')
+    return
 
   # Return config
   AlohaPlugin.create('oer-image', {
