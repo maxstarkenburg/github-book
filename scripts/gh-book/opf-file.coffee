@@ -18,6 +18,8 @@ define [
     branch: true # This element will show up in the sidebar listing
 
     initialize: () ->
+      super {root:@}
+
       # Contains all entries in the OPF file (including images)
       @manifest = new Backbone.Collection()
       # Contains all items in the ToC (including internal nodes like "Chapter 3")
@@ -28,31 +30,33 @@ define [
       # Backbone sets this option when a model is being parsed.
       # This way we can ignore firing events when Backbone is parsing as well as
       # when we are internally updating models.
-      setNavModel = (options) => @navModel.set 'body', @_serializeNavModel(), options
+      setNavModel = (options) =>
+        if not options.doNotReparse
+          options.doNotReparse = true
+          @navModel.set 'body', @_serializeNavModel(), options
 
       @tocNodes.on 'tree:add',    (model, collection, options) => @tocNodes.add model, options
       @tocNodes.on 'tree:remove', (model, collection, options) => @tocNodes.remove model, options
 
-      @tocNodes.on 'add remove', (model, collection, options) =>
-        setNavModel() if not options.parse
-      @tocNodes.on 'tree:change change reset', (collection, options) =>
+      @getChildren().on 'tree:change add remove', (model, collection, options) =>
+        setNavModel(options)
+      @getChildren().on 'change reset', (collection, options) =>
         # HACK: `?` is because `inherits/container.add` calls `trigger('change')`
-        setNavModel() if not options?.parse
+        setNavModel(options)
 
       @load()
 
-      super {root:@}
 
     _loadComplex: (fetchPromise) ->
       fetchPromise
       .then () =>
         # Clear that anything on the model has changed
         @changed = {}
-        @navModel.load()
+        return @navModel.load()
       .then () =>
         @_parseNavModel()
         @listenTo @navModel, 'change:body', (model, value, options) =>
-          @_parseNavModel() if not options.parse
+          @_parseNavModel() if not options.doNotReparse
 
 
     _parseNavModel: () ->
@@ -87,26 +91,24 @@ define [
 
             model = @newNode {title: title, htmlAttributes: attributes, model: contentModel}
 
-            collection.add model, {parse:true}
-
-            @listenTo model, 'change:title', () =>
-              console.warn 'TODO: BUG: Change the title in the ToC'
+            collection.add model, {doNotReparse:true}
 
           else if $span[0]
             model = new TocNode {title: $span.text(), htmlAttributes: attributes, root: @}
-            collection.add model, {parse:true}
 
-            # Recurse
+            # Recurse and then add the node. that way we reduce the number of notifications
             recBuildTree(model.getChildren(), $ol, contextPath) if $ol[0]
+            collection.add model, {doNotReparse:true}
+
           else throw 'ERROR: Invalid Navigation Tree Structure'
 
           # Add the model to the tocNodes so we can listen to changes and update the ToC HTML
-          @tocNodes.add model, {parse:true}
+          @tocNodes.add model, {doNotReparse:true}
 
 
       $root = $body.find('nav > ol')
-      @tocNodes.reset [@], {parse:true}
-      @getChildren().reset()
+      @tocNodes.reset [@], {doNotReparse:true}
+      @getChildren().reset([], {doNotReparse:true})
       recBuildTree(@getChildren(), $root, @navModel.id)
 
 
@@ -172,7 +174,7 @@ define [
           mediaType: mediaType
           properties: $item.attr 'properties'
 
-        allContent.add model
+        allContent.add model, {loading:true}
         @manifest.add model
 
         # If we stumbled upon the special navigation document

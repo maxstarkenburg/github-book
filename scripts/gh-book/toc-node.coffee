@@ -4,7 +4,7 @@ define [
   'cs!mixins/tree'
 ], (Backbone, XhtmlFile, treeMixin) ->
 
-  mediaType = 'application/vnd.org.cnx.folder'
+  mediaType = 'application/vnd.org.cnx.section'
 
   class TocNode extends Backbone.Model
 
@@ -15,10 +15,10 @@ define [
       @set 'title', options.title
       @htmlAttributes = options.htmlAttributes or {}
 
-      @on 'change:title', (model, options) =>
+      @on 'change:title', (model, value, options) =>
         @trigger 'tree:change', model, @, options
 
-      @initializeTreeHandlers(options)
+      @_initializeTreeHandlers(options)
 
     # Views rely on the mediaType to be set in here
     # TODO: Fix it in the view's `templateHelpers`

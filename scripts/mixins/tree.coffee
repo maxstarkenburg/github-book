@@ -8,12 +8,13 @@
 # - defers construction of new nodes when they are dropped to the root
 # - works when moving from one tree to another
 #
+# **Note:** Be sure to call `_initializeTreeHandlers` during `initialize`
 # **Note:** Instance variables used by this mixin are prefixed with `_tree_`
 define ['backbone'], (Backbone) ->
 
   treeMixin =
 
-    initializeTreeHandlers: (options) ->
+    _initializeTreeHandlers: (options) ->
       throw 'BUG: Missing constructor options' if not options
       throw 'BUG: Missing root' if not options.root
       #throw 'BUG: Missing title or model' if not options.title
@@ -29,7 +30,7 @@ define ['backbone'], (Backbone) ->
         #
 
         # Remove the child if it is already attached somewhere
-        child._tree_parent.removeChild(child) if child._tree_parent
+        child._tree_parent.removeChild(child) if child._tree_parent and child._tree_parent != @
 
         child._tree_parent = @
         child._tree_root = @_tree_root
@@ -40,8 +41,10 @@ define ['backbone'], (Backbone) ->
         delete child._tree_root
         @trigger 'tree:remove', child, collection, options
 
-      @_tree_children.on 'change', (child, collection, options) =>
-        @trigger 'tree:change', child, collection, options
+      @_tree_children.on 'change', (child, options) =>
+        # Send 3 arguments so it matches the same signature
+        # as `Collection.add/remove` and `tree:add/tree:remove`.
+        @trigger 'tree:change', child, @_tree_children, options
 
       trickleEvents = (name) =>
         @_tree_children.on name, (model, collection, options) =>
@@ -56,12 +59,14 @@ define ['backbone'], (Backbone) ->
 
     newNode: (options) -> throw 'BUG: Only the root can create new Pointer Nodes'
 
-    getParent: () -> @_tree_parent
-    getChildren: () -> @_tree_children
+    getParent:   () -> @_tree_parent
+    getChildren: () -> @_tree_children or throw 'BUG! This node has no children. Call _initializeTreeHandlers ?'
 
     removeChild: (model) ->
-      throw 'BUG: child is not in this node' if not @getChildren().get(model.id)
-      @getChildren().remove(model.id)
+      children = @getChildren()
+      throw 'BUG: child is not in this node' if not (children.contains(model) or children.get(model.id))
+      model = children.get(model.id) if !children.contains(model)
+      children.remove(model)
 
     addChild: (model, at=0) ->
       children = @getChildren()
@@ -76,8 +81,9 @@ define ['backbone'], (Backbone) ->
         if children.indexOf(realModel) < at
           at = at - 1
         children.remove(realModel)
+        realModel._tree_parent = null
 
-      # Before adding the model make sure it's a Tree Node (does it have `._children`.
+      # Before adding the model make sure it's a Tree Node (does it have `._tree_children`.
       # If not, wrap it in a node
       if ! (model._tree_children)
         model = @_tree_root.newNode {model:model}
