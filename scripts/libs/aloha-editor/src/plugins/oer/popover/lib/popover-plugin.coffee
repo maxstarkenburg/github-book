@@ -88,8 +88,11 @@ There are 3 variables that are stored on each element;
 
 ###
 
-define [ 'aloha', 'jquery' ], (Aloha, jQuery) ->
+define [ 'aloha', 'jquery', 'css!../../../oer/popover/css/popover.css' ], (Aloha, jQuery) ->
 
+  popover_template = '''<div class="aloha popover"><div class="arrow"></div>
+    <h3 class="popover-title"></h3>
+    <div class="popover-content"></div></div>'''
 
   # This position code was refactored out because it is also used to move the
   # Popover when the document changes
@@ -211,11 +214,6 @@ define [ 'aloha', 'jquery' ], (Aloha, jQuery) ->
   if typeof($.fn.tooltip.defaults.container) == 'undefined'
     monkeyPatch()
 
-  # Stop mousedown events inside a popover from propagating up to
-  # aloha, causing the editor to deactivate and the popover to close.
-  jQuery('body').on 'mousedown', '.popover', (evt) ->
-    evt.stopPropagation()
-
   Popover =
     MILLISECS: 2000
     register: (cfg) -> bindHelper(new Helper(cfg))
@@ -252,10 +250,16 @@ define [ 'aloha', 'jquery' ], (Aloha, jQuery) ->
               $node.on 'hide.bubble', =>
                 @blur.bind($node[0])($node.data('popover').$tip)
 
+            # Specifying 'container: body' has no effect on bootstrap<2.3,
+            # but on the newer versions it places the popover outside
+            # the editor area, which avoids selecttion-changed events
+            # firing while you type inside a popover.
             $node.popover
               html: true # bootstrap changed the default for this config option so set it to HTML
               placement: @placement or 'bottom'
               trigger: 'manual'
+              template: popover_template
+              container: 'body'
               content: =>
                 @populator.bind($node)($node, @) # Can't quite decide whether the populator code should use @ or the 1st arg.
 
@@ -281,8 +285,8 @@ define [ 'aloha', 'jquery' ], (Aloha, jQuery) ->
         $node.removeData('aloha-bubble-timer')
         $node.data('aloha-bubble-selected', false)
         if $node.data('aloha-bubble-visible')
-          $node.removeData('aloha-bubble-visible')
           $node.popover 'hide'
+          $node.removeData('aloha-bubble-visible')
 
       # The only reason I map mouseenter is so I can catch new elements that are added to the DOM
       $el.on 'mouseenter.bubble', @selector, (evt) =>
