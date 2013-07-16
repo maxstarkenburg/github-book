@@ -70,9 +70,8 @@ There are 3 variables that are stored on each element;
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  define(['aloha', 'jquery', 'css!../../../oer/popover/css/popover.css'], function(Aloha, jQuery) {
-    var Bootstrap_Popover__position, Bootstrap_Popover_hide, Bootstrap_Popover_show, Helper, Popover, bindHelper, findMarkup, monkeyPatch, popover_template, selectionChangeHandler;
-    popover_template = '<div class="aloha popover"><div class="arrow"></div>\n<h3 class="popover-title"></h3>\n<div class="popover-content"></div></div>';
+  define(['aloha', 'jquery', 'css!../../../oer/overlay/css/popover.css'], function(Aloha, jQuery) {
+    var Bootstrap_Popover__position, Bootstrap_Popover_hide, Bootstrap_Popover_show, Helper, Popover, bindHelper, findMarkup, monkeyPatch, selectionChangeHandler;
     Bootstrap_Popover__position = function($tip, hint) {
       var actualHeight, actualPlacement, actualWidth, inside, placement, pos, tp;
       placement = (typeof this.options.placement === "function" ? this.options.placement.call(this, $tip[0], this.$element[0]) : this.options.placement);
@@ -149,13 +148,8 @@ There are 3 variables that are stored on each element;
       return $tip.css(tp).removeClass("top bottom left right").addClass(actualPlacement);
     };
     Bootstrap_Popover_show = function() {
-      var $tip, e;
+      var $tip;
       if (this.hasContent() && this.enabled) {
-        e = $.Event('show');
-        this.$element.trigger(e);
-        if (e.isDefaultPrevented()) {
-          return;
-        }
         $tip = this.tip();
         this.setContent();
         if (this.options.animation) {
@@ -170,14 +164,14 @@ There are 3 variables that are stored on each element;
         $tip.addClass("in");
         /* Trigger the shown event*/
 
-        return this.$element.trigger('shown');
+        return this.$element.trigger('shown-popover');
       }
     };
     Bootstrap_Popover_hide = function(originalHide) {
       return function() {
-        this.$element.trigger('hide');
+        this.$element.trigger('hide-popover');
         originalHide.bind(this)();
-        this.$element.trigger('hidden');
+        this.$element.trigger('hidden-popover');
         return this;
       };
     };
@@ -188,9 +182,10 @@ There are 3 variables that are stored on each element;
       proto.show = Bootstrap_Popover_show;
       return proto.hide = Bootstrap_Popover_hide(proto.hide);
     };
-    if (typeof $.fn.tooltip.defaults.container === 'undefined') {
-      monkeyPatch();
-    }
+    monkeyPatch();
+    jQuery('body').on('mousedown', '.popover', function(evt) {
+      return evt.stopPropagation();
+    });
     Popover = {
       MILLISECS: 2000,
       register: function(cfg) {
@@ -203,7 +198,7 @@ There are 3 variables that are stored on each element;
         this.hover = false;
         jQuery.extend(this, cfg);
         if (this.focus || this.blur) {
-          console && console.warn('Popover.focus and Popover.blur are deprecated in favor of listening to the "shown" or "hidden" events on the original DOM element');
+          console && console.warn('Popover.focus and Popover.blur are deprecated in favor of listening to the "shown-popover" or "hide-popover" events on the original DOM element');
         }
       }
 
@@ -222,12 +217,12 @@ There are 3 variables that are stored on each element;
             $node = jQuery(node);
             if (!$node.data('popover')) {
               if (_this.focus) {
-                $node.on('shown.bubble', function() {
+                $node.on('shown-popover', function() {
                   return _this.focus.bind($node[0])($node.data('popover').$tip);
                 });
               }
               if (_this.blur) {
-                $node.on('hide.bubble', function() {
+                $node.on('hide-popover', function() {
                   return _this.blur.bind($node[0])($node.data('popover').$tip);
                 });
               }
@@ -235,8 +230,6 @@ There are 3 variables that are stored on each element;
                 html: true,
                 placement: _this.placement || 'bottom',
                 trigger: 'manual',
-                template: popover_template,
-                container: 'body',
                 content: function() {
                   return _this.populator.bind($node)($node, _this);
                 }
@@ -244,7 +237,7 @@ There are 3 variables that are stored on each element;
             }
           });
         };
-        $el.on('show-popover.bubble', this.selector, function(evt, hint) {
+        $el.on('show.bubble', this.selector, function(evt, hint) {
           var $node, that;
           $node = jQuery(evt.target);
           clearTimeout($node.data('aloha-bubble-timer'));
@@ -262,7 +255,7 @@ There are 3 variables that are stored on each element;
             return Bootstrap_Popover__position.bind(that)(that.$tip, hint);
           }
         });
-        $el.on('hide-popover.bubble', this.selector, function(evt) {
+        $el.on('hide.bubble', this.selector, function(evt) {
           var $node;
           $node = jQuery(evt.target);
           clearTimeout($node.data('aloha-bubble-timer'));
@@ -316,7 +309,7 @@ There are 3 variables that are stored on each element;
       };
 
       Helper.prototype.stopOne = function($nodes) {
-        $nodes.trigger('hide-popover');
+        $nodes.trigger('hide');
         $nodes.removeData('aloha-bubble-selected');
         return $nodes.popover('destroy');
       };
@@ -365,7 +358,7 @@ There are 3 variables that are stored on each element;
         return insideScope = false;
       });
       Aloha.bind('aloha-editable-created', function(evt, editable) {
-        return editable.obj.on('hidden', helper.selector, function() {
+        return editable.obj.on('hidden-popover', helper.selector, function() {
           return insideScope = false;
         });
       });
@@ -381,7 +374,7 @@ There are 3 variables that are stored on each element;
         if (Aloha.activeEditable) {
           nodes = jQuery(Aloha.activeEditable.obj).find(helper.selector);
           nodes = nodes.not($el);
-          nodes.trigger('hide-popover');
+          nodes.trigger('hide');
           enteredLinkScope = selectionChangeHandler(rangeObject, helper.selector);
           if (insideScope !== enteredLinkScope) {
             insideScope = enteredLinkScope;
@@ -390,12 +383,12 @@ There are 3 variables that are stored on each element;
             }
             if (enteredLinkScope) {
               if (originalEvent && originalEvent.pageX) {
-                $el.trigger('show-popover', {
+                $el.trigger('show', {
                   top: originalEvent.pageY,
                   left: originalEvent.pageX
                 });
               } else {
-                $el.trigger('show-popover');
+                $el.trigger('show');
               }
               $el.data('aloha-bubble-selected', true);
               $el.off('.bubble');
